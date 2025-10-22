@@ -64,10 +64,10 @@ library(scECODA)
 # Create ECODA objects
 
 You can create an ECODA object from a single-cell data (Seurat or
-SingleCellExperiment object).
+SingleCellExperiment object) with `create_ecoda_object()`.
 
 Alternatively, you can create an ECODA object from a data frame containing cell
-counts or frequencies (in % per sample).
+counts or frequencies (in % per sample) with `create_ecoda_object_helper()`.
 
 Based on the input, the following data and transformations will be automatically
 calculated:
@@ -203,7 +203,7 @@ ecoda_object <- create_ecoda_object_helper(
 
 To explore a dataset, Principal Component Analysis (PCA) is commonly performed
 as a first step. It is very useful to find the major axis of variation between
-samples.
+samples. You can plot a PCA of your ecoda_object with `plot_pca(ecoda_object)`.
 
 How strongly samples separate based on a user defined grouping can be quantified
 with different metrics, for example:
@@ -478,8 +478,8 @@ ecoda_object <- create_ecoda_object(
 
 # # Internally this is calculated with this function:
 # pb <- calculate_pseudobulk(
-#   count_matrix = data[["RNA"]]$counts,
-#   sample_ids = cell_data_df[[sample_col]]
+#   count_matrix = seurat_object[["RNA"]]$counts,
+#   sample_ids = seurat_object@meta.data[[sample_col]]
 # )
 
 plot_pca(
