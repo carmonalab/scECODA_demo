@@ -27,17 +27,35 @@ knitr::opts_chunk$set(
 )
 ```
 
+# Exploring sample structure at the population scale based on cell type composition
+
+--------------------------------------------------------------------------------
+
 # Introduction
 
 The scECODA package provides functions for *s*ingle-*c*ell *E*xploratory
-*CO*mpositional *D*ata *A*nalysis at the population-scale. It enables users to
+*CO*mpositional *D*ata *A*nalysis at the population scale. It enables users to
 explore their dataset by visualizing the sample structure and how groups of
 samples relate to each other by providing numerous convenient plotting and
 clustering functions. Additionally, it provides metrics to quantify how strongly
 groups of samples separate and which cell types are driving this separation
 (differential abundance analysis).
 
+--------------------------------------------------------------------------------
+
+# R environment
+
+Check package dependencies and install scECODA
+
 ```{r}
+if (!requireNamespace("renv")) install.packages("renv")
+library(renv)
+renv::restore()
+```
+
+```{r}
+remotes::install_github("carmonalab/scECODA")
+
 library(scECODA)
 ```
 
@@ -89,7 +107,7 @@ a data frame of relative abundances.
 # Loading an example Seurat dataset
 library(Seurat)
 library(SeuratData)
-# InstallData("pbmc3k")
+InstallData("pbmc3k")
 data("pbmc3k")
 seurat_object <- UpdateSeuratObject(pbmc3k)
 ```
@@ -133,8 +151,6 @@ names(sce_object@colData)
 ```
 
 ```{r}
-library(scECODA)
-
 # Create ECODA object
 ecoda_object <- create_ecoda_object(
   sce_object,
@@ -148,7 +164,8 @@ ecoda_object <- create_ecoda_object(
 
 Metadata can be added optionally.
 
-Here, we load the immune cell composition in samples from a breast cancer cohort [@zhang2021]
+Here, we load the immune cell composition in samples from a breast cancer cohort
+[@zhang2021]
 
 **NOTES:**
 
@@ -329,7 +346,8 @@ plot_heatmap(
 )
 ```
 
-And here an example of a large healthy cohort with 868 samples and 69 cell types [@gong2024]:
+And here an example of a large healthy cohort with 868 samples and 69 cell types
+[@gong2024]:
 
 ```{r fig.height=16, fig.width=12}
 ecoda_object <- create_ecoda_object_helper(
