@@ -1,0 +1,184 @@
+---
+title: "Case Study 1: Granularity Matters"
+author: "Christian Halter"
+date: "`r Sys.Date()`"
+output:
+  BiocStyle::html_document:
+    toc_float: true
+  BiocStyle::pdf_document: default
+editor_options: 
+  markdown: 
+    wrap: 80
+bibliography: references.bib
+knit: (function(input_file, encoding) {
+  out_dir <- 'docs';
+  rmarkdown::render(input_file, encoding=encoding,
+  output_file=file.path(dirname(input_file), out_dir, 'Case_Study_1.html'))})
+---
+
+```{r setup, include=FALSE}
+# Solution for the "magick package is required to crop" error:
+knitr::opts_chunk$set(
+  echo = TRUE, # keep showing code chunks
+  message = FALSE, 
+  warning = FALSE,
+  # This is the line that fixes the cropping issue:
+  crop = NULL
+)
+```
+
+--------------------------------------------------------------------------------
+
+# Fine-grained Cell Type Annotation is Crucial for Uncovering Biological Insights
+
+Single-cell technologies have allowed us to move beyond bulk gene expression,
+where measurements are often highly correlated with the underlying cell type
+composition. While it is now common practice to group single cells into
+functional states based on their gene or protein expression, the resolution of
+this grouping—the granularity of cell type annotation—remains a critical user
+choice.
+
+The Problem of Low-Resolution Annotation When analyzing differences in cell
+composition across patient cohorts or experimental conditions, a low-resolution
+(broad) annotation (e.g., "T cell" instead of "Effector CD8+ T cell") risks
+averaging out subtle yet highly relevant biological signals. A small, but highly
+consequential change in a specific T cell subset may be statistically masked by
+the stable abundance of the broader T cell population.
+
+The scECODA Solution This case study demonstrates why the choice of annotation
+granularity is vital for exploratory compositional data analysis (ECODA). Using
+the scECODA R package, we will show how:
+
+A broad, low-resolution annotation fails to detect significant differences or
+yields biologically uninformative results.
+
+A fine-grained, high-resolution annotation of the exact same dataset
+successfully uncovers novel, statistically robust, and biologically meaningful
+shifts in cell type abundance across samples.
+
+By highlighting this principle, we provide the primary justification for
+investing effort in high-resolution cell type annotation.
+
+--------------------------------------------------------------------------------
+
+# R environment
+
+Check package dependencies and install scECODA
+
+```{r}
+# if (!requireNamespace("renv")) install.packages("renv")
+# library(renv)
+# renv::restore()
+# renv::install("carmonalab/scECODA")
+
+remotes::install_github("carmonalab/scECODA")
+library(scECODA)
+```
+
+--------------------------------------------------------------------------------
+
+# Example datasets
+
+Shown below is the healthy cohort by [@gong2024]. **Using a low granular, broad
+cell type annotation the samples do not separate**. Using highly granular,
+detailed annotation of cell types and subtypes a grouping structure emerges:
+samples can be separated by age group and cytomegalovirus (CMV) infection status
+based on their **high-resolution cell type composition**.
+
+```{r fig.height=7, fig.width=9}
+data("example_data")
+
+data <- example_data$GongSharma_full
+metadata <- data$metadata
+metadata$age_cmv <- paste0(metadata$age_group, " CMV-", metadata$subject.cmv)
+
+counts_lowres <- data$cell_counts_lowresolution
+number_of_celltypes_lr <- ncol(counts_lowres)
+
+ecoda_object_lowres <- create_ecoda_object_helper(
+  counts = counts_lowres,
+  metadata = metadata
+)
+
+counts_highres <- data$cell_counts_highresolution
+number_of_celltypes_hr <- ncol(counts_highres)
+
+ecoda_object_highres <- create_ecoda_object_helper(
+  counts = counts_highres,
+  metadata = metadata
+)
+
+
+# Using only low granularity cell type annotation
+plot_pca(
+  ecoda_object_lowres,
+  label_col = "age_cmv",
+  title = paste("PCA based on low granularity cell type annotation\nNumber of cell types:", number_of_celltypes_lr),
+  n_ct_show = 5
+)
+
+
+# Using only high granularity cell type annotation
+plot_pca(
+  ecoda_object_highres,
+  label_col = "age_cmv",
+  title = paste("PCA based on high granularity cell type annotation\nNumber of cell types:", number_of_celltypes_hr),
+  n_ct_show = 9
+)
+```
+
+This is another example based on the dataset from [@adams2020] of samples from
+pulmonary fibrosis patients, including lung samples from normal tissue,
+idiopathic pulmonary fibrosis or chronic obstructive pulmonary disease.
+
+```{r}
+data("example_data")
+
+data <- example_data$Adams
+main_bio_condition <- data$main_biologicalcondition_columnname
+metadata <- data$metadata
+
+counts_lowres <- data$cell_counts_lowresolution
+number_of_celltypes_lr <- ncol(counts_lowres)
+
+ecoda_object_lowres <- create_ecoda_object_helper(
+  counts = counts_lowres,
+  metadata = metadata
+)
+
+counts_highres <- data$cell_counts_highresolution
+number_of_celltypes_hr <- ncol(counts_highres)
+
+ecoda_object_highres <- create_ecoda_object_helper(
+  counts = counts_highres,
+  metadata = metadata
+)
+
+
+# Using only low granularity cell type annotation
+plot_pca(
+  ecoda_object_lowres,
+  label_col = main_bio_condition,
+  # use_only_hvcs = TRUE,
+  title = paste("PCA based on low granularity cell type annotation\nNumber of cell types:", number_of_celltypes_lr),
+  n_ct_show = 5
+)
+
+
+# Using only high granularity cell type annotation
+plot_pca(
+  ecoda_object_highres,
+  label_col = main_bio_condition,
+  # use_only_hvcs = TRUE,
+  title = paste("PCA based on high granularity cell type annotation\nNumber of cell types:", number_of_celltypes_hr),
+  n_ct_show = 8
+)
+```
+
+# References
+
+# Session Info
+
+```{r}
+sessionInfo()
+```
