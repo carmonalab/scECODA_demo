@@ -169,7 +169,7 @@ Here, we load the immune cell composition in samples from a breast cancer cohort
 
 -   If you create an ECODA object from a data frame containg relative abundances
     (in %), please use percentage values (e.g. 30 for 30%) and not as decimals
-    (NOT 0.3 for 30%).
+    (NOT 0.3 for 30%). If the relative abundances sum up to 100%, they will be automatically re-scaled to 100 and you will be informed with a message.
 -   If you do add metadata, **it is important to make sure that the
     counts/frequency and the metadata data frames have the same row names**.
 
