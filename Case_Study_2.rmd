@@ -34,11 +34,12 @@ pseudobulk**, especially when studying complex conditions and tissues with
 high-resolution cell type annotation including numerous low abundant cell
 subtypes.
 
-Additionally, **ECODA is much more interpretable** (10-100 cell types) compared to
-gene expression (2'000 - 20'000 genes).
+Additionally, **ECODA is much more interpretable** (10-100 cell types) compared
+to gene expression (2'000 - 20'000 genes).
 
 In this example, you will see how a dataset without sample separation looks like
-and how it compares to a dataset with differentially abundant cell types, in the cell type compositional and gene expressional space.
+and how it compares to a dataset with differentially abundant cell types, in the
+cell type compositional and gene expressional space.
 
 Also, it will give you a feeling about the sensitivity of cell type composition
 based sample separation versus pseudobulk based sample separation.
