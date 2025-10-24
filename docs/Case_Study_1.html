@@ -11,7 +11,7 @@
 
 <meta name="author" content="Christian Halter" />
 
-<meta name="date" content="2025-10-23" />
+<meta name="date" content="2025-10-24" />
 
 <title>Case Study 1: Granularity Matters</title>
 
@@ -1851,7 +1851,7 @@ function toggle_visibility(id1) {
 
 <h1 class="title toc-ignore">Case Study 1: Granularity Matters</h1>
 <p class="author-name">Christian Halter</p>
-<h4 class="date">2025-10-23</h4>
+<h4 class="date">2025-10-24</h4>
 
 </div>
 
@@ -1892,7 +1892,7 @@ investing effort in high-resolution cell type annotation.</p>
 # renv::install(&quot;carmonalab/scECODA&quot;)
 
 remotes::install_github(&quot;carmonalab/scECODA&quot;)</code></pre>
-<pre><code>## * checking for file ‘/private/var/folders/tw/3_vqzv_517515r5vv8pnrljc0000gn/T/RtmpPw6Ao6/remotesdf6e6371ec6e/carmonalab-scECODA-153276b/DESCRIPTION’ ... OK
+<pre><code>## * checking for file ‘/private/var/folders/tw/3_vqzv_517515r5vv8pnrljc0000gn/T/RtmpJ4HZDO/remotes393a2815e9e0/carmonalab-scECODA-cf1032c/DESCRIPTION’ ... OK
 ## * preparing ‘scECODA’:
 ## * checking DESCRIPTION meta-information ... OK
 ## * checking for LF line-endings in source and make files and shell scripts
@@ -1977,7 +1977,6 @@ ecoda_object_highres &lt;- create_ecoda_object_helper(
 plot_pca(
   ecoda_object_lowres,
   label_col = main_bio_condition,
-  # use_only_hvcs = TRUE,
   title = paste(&quot;PCA based on low granularity cell type annotation\nNumber of cell types:&quot;, number_of_celltypes_lr),
   n_ct_show = 5
 )</code></pre>
@@ -1986,7 +1985,6 @@ plot_pca(
 plot_pca(
   ecoda_object_highres,
   label_col = main_bio_condition,
-  # use_only_hvcs = TRUE,
   title = paste(&quot;PCA based on high granularity cell type annotation\nNumber of cell types:&quot;, number_of_celltypes_hr),
   n_ct_show = 8
 )</code></pre>

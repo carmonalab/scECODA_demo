@@ -159,7 +159,6 @@ ecoda_object_highres <- create_ecoda_object_helper(
 plot_pca(
   ecoda_object_lowres,
   label_col = main_bio_condition,
-  # use_only_hvcs = TRUE,
   title = paste("PCA based on low granularity cell type annotation\nNumber of cell types:", number_of_celltypes_lr),
   n_ct_show = 5
 )
@@ -169,7 +168,6 @@ plot_pca(
 plot_pca(
   ecoda_object_highres,
   label_col = main_bio_condition,
-  # use_only_hvcs = TRUE,
   title = paste("PCA based on high granularity cell type annotation\nNumber of cell types:", number_of_celltypes_hr),
   n_ct_show = 8
 )

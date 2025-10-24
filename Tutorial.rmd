@@ -228,8 +228,8 @@ plot_pca(
 # Using only the most highly variable cell types
 plot_pca(
   ecoda_object,
+  slot = "clr_hvc",
   label_col = "Tissue",
-  use_only_hvcs = TRUE,
   title = "PCA based on highly variable cell types",
   n_ct_show = 5
 )
@@ -369,7 +369,7 @@ similar sample clustering, while being much more interpretable.
 ```{r}
 plot_heatmap(
   ecoda_object,
-  use_only_hvcs = TRUE,
+  slot = "clr_hvc",
   label_col = c("subject.cmv", "age_group"),
   # Additional arguments for pheatmap:
   cutree_rows = 3,
@@ -398,7 +398,7 @@ samples by age), there seems to be a cluster of ISG+ cell types, memory T cells
 and monocytes/DCs whose abundance strongly correlate, respectively.
 
 ```{r fig.height=16, fig.width=16}
-plot_corr(ecoda_object, use_only_hvcs = TRUE)
+plot_corr(ecoda_object, slot = "clr_hvc")
 ```
 
 ## Highly variable cell types
