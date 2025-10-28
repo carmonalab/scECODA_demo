@@ -35,19 +35,19 @@ Single-cell technologies have allowed us to move beyond bulk gene expression,
 where measurements are often highly correlated with the underlying cell type
 composition. While it is now common practice to group single cells into
 functional states based on their gene or protein expression, the resolution of
-this grouping—the granularity of cell type annotation—remains a critical user
-choice.
+this grouping - the granularity of cell type annotation - remains a critical
+user choice.
 
-The Problem of Low-Resolution Annotation When analyzing differences in cell
-composition across patient cohorts or experimental conditions, a low-resolution
-(broad) annotation (e.g., "T cell" instead of "Effector CD8+ T cell") risks
-averaging out subtle yet highly relevant biological signals. A small, but highly
-consequential change in a specific T cell subset may be statistically masked by
-the stable abundance of the broader T cell population.
+When analyzing differences in cell composition across patient cohorts or
+experimental conditions, a low-resolution (broad) annotation (e.g., "T cell"
+instead of "Effector CD8+ T cell") risks averaging out subtle yet highly
+relevant biological signals. A small, but highly consequential change in a
+specific T cell subset may be statistically masked by the stable abundance of
+the broader T cell population.
 
-The scECODA Solution This case study demonstrates why the choice of annotation
-granularity is vital for exploratory compositional data analysis (ECODA). Using
-the scECODA R package, we will show how:
+This case study demonstrates why the choice of annotation granularity is vital
+for exploratory compositional data analysis (ECODA). Using the scECODA R
+package, we will show how:
 
 A broad, low-resolution annotation fails to detect significant differences or
 yields biologically uninformative results.
@@ -114,7 +114,7 @@ plot_pca(
   ecoda_object_lowres,
   label_col = "age_cmv",
   title = paste("PCA based on low granularity cell type annotation\nNumber of cell types:", number_of_celltypes_lr),
-  n_ct_show = 5
+  n_hv_feat_show = 5
 )
 
 
@@ -123,7 +123,7 @@ plot_pca(
   ecoda_object_highres,
   label_col = "age_cmv",
   title = paste("PCA based on high granularity cell type annotation\nNumber of cell types:", number_of_celltypes_hr),
-  n_ct_show = 9
+  n_hv_feat_show = 9
 )
 ```
 
@@ -160,7 +160,7 @@ plot_pca(
   ecoda_object_lowres,
   label_col = main_bio_condition,
   title = paste("PCA based on low granularity cell type annotation\nNumber of cell types:", number_of_celltypes_lr),
-  n_ct_show = 5
+  n_hv_feat_show = 5
 )
 
 
@@ -169,7 +169,7 @@ plot_pca(
   ecoda_object_highres,
   label_col = main_bio_condition,
   title = paste("PCA based on high granularity cell type annotation\nNumber of cell types:", number_of_celltypes_hr),
-  n_ct_show = 8
+  n_hv_feat_show = 8
 )
 ```
 
