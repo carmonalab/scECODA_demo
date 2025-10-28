@@ -438,19 +438,15 @@ plot_varmean(ecoda_object_new) + ggtitle("Top 5 HVCs")
 # scECODA and pseudobulk
 
 **ECODA is much more interpretable** (10-100 cell types) compared to gene
-expression (2'000 - 20'000 genes).
-
-Pseudobulk analysis has the advantage of not requiring cell type annotations.
-However, it is also commonly affected by batch effects which need to be
-accounted for.
+expression (2'000 - 20'000 genes). However, pseudobulk analysis has the
+advantage of not requiring cell type annotations.
 
 The scECODA package provides convenient functions to explore sample structure at
 the population level based on cell type composition but also by default
 automatically calculates DESeq2-normalized [@love2015] sample pseudobulk gene
 expression.
 
-This offers the possibility to compare sample structure based on either cell
-type composition or pseudobulk gene expression like this:
+A PCA plot based on pseudobulk can be plotted like this:
 
 ```{r message=FALSE, warning=FALSE}
 # Loading an example SingleCellExperiment dataset
@@ -489,4 +485,3 @@ plot_pca(
 ```{r}
 sessionInfo()
 ```
-
