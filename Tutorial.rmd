@@ -119,7 +119,10 @@ n_samples <- 40
 n_groups <- 2
 
 seurat_object$sample_id <- ""
-seurat_object$sample_id <- rep(x = paste0("sample", seq(n_samples)), length.out = length(seurat_object$sample_id))
+seurat_object$sample_id <- rep(
+  x = paste0("sample", seq(n_samples)),
+  length.out = length(seurat_object$sample_id)
+)
 seurat_object$condition_id <- ""
 seurat_object$condition_id <- c(rep("condition1", n_samples/n_groups),
                       rep("condition2", n_samples/n_groups))
@@ -142,7 +145,10 @@ library(scRNAseq)
 
 all.ds <- surveyDatasets()
 ds <- 1
-sce_object <- fetchDataset(all.ds@listData[["name"]][ds], all.ds@listData[["version"]][ds])
+sce_object <- fetchDataset(
+  all.ds@listData[["name"]][ds],
+  all.ds@listData[["version"]][ds]
+)
 
 names(sce_object@colData)
 ```
@@ -214,7 +220,7 @@ with different metrics, for example:
 ```{r message=FALSE, warning=FALSE}
 ecoda_object <- create_ecoda_object_helper(
   counts = example_data$Zhang$cell_counts_lowresolution,
-  metadata = example_data$Zhang$metadata
+  metadata = example_data$Zhang$metadata, top_n_hvcs = 3
 )
 
 plot_pca(
@@ -233,6 +239,38 @@ plot_pca(
   n_hv_feat_show = 5
 )
 ```
+
+```{r}
+df <- ecoda_object@freq[, ecoda_object@hvcs[1:3]]
+df$group <- ecoda_object@metadata$Tissue
+
+library(ggplot2)
+# Convert compositions (A,B,C with A+B+C=1) to triangle coordinates
+to_cartesian <- function(A,B,C) {
+  x <- 0.5 * (2*B + C) / (A+B+C)
+  y <- sqrt(3)/2 * C / (A+B+C)
+  data.frame(x, y)
+}
+df <- data.frame(
+  A=c(0.2,0.5,0.3,0.7),
+  B=c(0.5,0.3,0.6,0.2),
+  C=c(0.3,0.2,0.1,0.1),
+  group=c("Tumor","Tumor","Normal","Normal")
+)
+df[,1:3] <- df[,1:3]/rowSums(df[,1:3])
+xy <- to_cartesian(df[,1], df[,2], df[,3])
+df <- cbind(df, xy)
+ggplot(df, aes(x, y, color=group)) +
+  geom_polygon(data=data.frame(
+    x=c(0,1,0.5,0),
+    y=c(0,0,sqrt(3)/2,0)
+  ), fill=NA, color="black") +
+  geom_point(size=3) +
+  coord_equal() +
+  theme_minimal() +
+  labs(title="Simplex plot (pure ggplot2)")
+```
+
 
 ### Quantifying group separation
 
@@ -430,9 +468,11 @@ plot_varmean(ecoda_object) +
   ggtitle("Default - cell types explaining 50% variance")
 
 ecoda_object_new <- find_hvcs(ecoda_object, variance_explained = 0.8)
-plot_varmean(ecoda_object_new) + ggtitle("Cell types explaining 80% variance")
+plot_varmean(ecoda_object_new) +
+  ggtitle("Cell types explaining 80% variance")
 ecoda_object_new <- find_hvcs(ecoda_object, top_n_hvcs = 5)
-plot_varmean(ecoda_object_new) + ggtitle("Top 5 HVCs")
+plot_varmean(ecoda_object_new) +
+  ggtitle("Top 5 HVCs")
 ```
 
 # scECODA and pseudobulk
@@ -454,7 +494,10 @@ library(scRNAseq)
 
 all.ds <- surveyDatasets()
 ds <- 1
-sce_object <- fetchDataset(all.ds@listData[["name"]][ds], all.ds@listData[["version"]][ds])
+sce_object <- fetchDataset(
+  all.ds@listData[["name"]][ds],
+  all.ds@listData[["version"]][ds]
+)
 
 ecoda_object <- create_ecoda_object(
   sce_object,
