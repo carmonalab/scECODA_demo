@@ -113,8 +113,7 @@ zero, indicating indeed a random distribution of our samples between conditions.
 ecoda_object <- create_ecoda_object(
   seurat_object,
   sample_col = "sample_id",
-  celltype_col = "seurat_annotations",
-  get_pb = TRUE
+  celltype_col = "seurat_annotations"
 )
 
 # # Internally this is calculated with this function:
@@ -164,11 +163,10 @@ indicating separation of the two groups of samples.
 ecoda_object_DiffAbu <- create_ecoda_object(
   seurat_object_DiffAbu,
   sample_col = "sample_id",
-  celltype_col = "seurat_annotations",
-  get_pb = TRUE
+  celltype_col = "seurat_annotations"
 )
-plot_pca(ecoda_object_DiffAbu, label_col = "condition_id", title = "PCA cell type composition", n_ct_show = 2)
-plot_pca(ecoda_object_DiffAbu, slot = "pb", label_col = "condition_id", title = "PCA pseudobulk")
+plot_pca(ecoda_object_DiffAbu, label_col = "condition_id", title = "PCA cell type composition", n_hv_feat_show = 2)
+plot_pca(ecoda_object_DiffAbu, slot = "pb", label_col = "condition_id", title = "PCA pseudobulk", n_hv_feat_show = 2)
 ```
 
 It can be seen that CD8 T and NK cells are significantly higher in the
@@ -268,11 +266,10 @@ pick up gene expressional differences in low abundant cell types:
 ecoda_object_DiffAbu <- create_ecoda_object(
   seurat_object_DiffAbu,
   sample_col = "sample_id",
-  celltype_col = "seurat_annotations",
-  get_pb = TRUE
+  celltype_col = "seurat_annotations"
 )
-plot_pca(ecoda_object_DiffAbu, label_col = "condition_id", title = "PCA cell type composition", n_ct_show = 4)
-plot_pca(ecoda_object_DiffAbu, slot = "pb", label_col = "condition_id", title = "PCA pseudobulk")
+plot_pca(ecoda_object_DiffAbu, label_col = "condition_id", title = "PCA cell type composition", n_hv_feat_show = 4)
+plot_pca(ecoda_object_DiffAbu, slot = "pb", label_col = "condition_id", title = "PCA pseudobulk", n_hv_feat_show = 4)
 ```
 
 # References
