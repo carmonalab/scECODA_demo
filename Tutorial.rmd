@@ -220,7 +220,7 @@ with different metrics, for example:
 ```{r message=FALSE, warning=FALSE}
 ecoda_object <- create_ecoda_object_helper(
   counts = example_data$Zhang$cell_counts_lowresolution,
-  metadata = example_data$Zhang$metadata, top_n_hvcs = 3
+  metadata = example_data$Zhang$metadata,
 )
 
 plot_pca(
@@ -239,38 +239,6 @@ plot_pca(
   n_hv_feat_show = 5
 )
 ```
-
-```{r}
-df <- ecoda_object@freq[, ecoda_object@hvcs[1:3]]
-df$group <- ecoda_object@metadata$Tissue
-
-library(ggplot2)
-# Convert compositions (A,B,C with A+B+C=1) to triangle coordinates
-to_cartesian <- function(A,B,C) {
-  x <- 0.5 * (2*B + C) / (A+B+C)
-  y <- sqrt(3)/2 * C / (A+B+C)
-  data.frame(x, y)
-}
-df <- data.frame(
-  A=c(0.2,0.5,0.3,0.7),
-  B=c(0.5,0.3,0.6,0.2),
-  C=c(0.3,0.2,0.1,0.1),
-  group=c("Tumor","Tumor","Normal","Normal")
-)
-df[,1:3] <- df[,1:3]/rowSums(df[,1:3])
-xy <- to_cartesian(df[,1], df[,2], df[,3])
-df <- cbind(df, xy)
-ggplot(df, aes(x, y, color=group)) +
-  geom_polygon(data=data.frame(
-    x=c(0,1,0.5,0),
-    y=c(0,0,sqrt(3)/2,0)
-  ), fill=NA, color="black") +
-  geom_point(size=3) +
-  coord_equal() +
-  theme_minimal() +
-  labs(title="Simplex plot (pure ggplot2)")
-```
-
 
 ### Quantifying group separation
 
