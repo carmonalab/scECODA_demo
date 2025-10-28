@@ -113,7 +113,8 @@ ecoda_object_highres <- create_ecoda_object_helper(
 plot_pca(
   ecoda_object_lowres,
   label_col = "age_cmv",
-  title = paste("PCA based on low granularity cell type annotation\nNumber of cell types:", number_of_celltypes_lr),
+#   title = paste("PCA based on low granularity cell type annotation
+# Number of cell types:", number_of_celltypes_lr),
   n_hv_feat_show = 5
 )
 
@@ -122,7 +123,8 @@ plot_pca(
 plot_pca(
   ecoda_object_highres,
   label_col = "age_cmv",
-  title = paste("PCA based on high granularity cell type annotation\nNumber of cell types:", number_of_celltypes_hr),
+#   title = paste("PCA based on high granularity cell type annotation
+# Number of cell types:", number_of_celltypes_hr),
   n_hv_feat_show = 9
 )
 ```
@@ -159,7 +161,7 @@ ecoda_object_highres <- create_ecoda_object_helper(
 plot_pca(
   ecoda_object_lowres,
   label_col = main_bio_condition,
-  title = paste("PCA based on low granularity cell type annotation\nNumber of cell types:", number_of_celltypes_lr),
+  title = paste("PCA based on low granularity cell type annotation"),
   n_hv_feat_show = 5
 )
 
@@ -168,7 +170,7 @@ plot_pca(
 plot_pca(
   ecoda_object_highres,
   label_col = main_bio_condition,
-  title = paste("PCA based on high granularity cell type annotation\nNumber of cell types:", number_of_celltypes_hr),
+  title = paste("PCA based on high granularity cell type annotation"),
   n_hv_feat_show = 8
 )
 ```
