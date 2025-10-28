@@ -130,8 +130,7 @@ seurat_object$condition_id <- c(rep("condition1", n_samples/n_groups),
 ecoda_object <- create_ecoda_object(
   seurat_object,
   sample_col = "sample_id",
-  celltype_col = "seurat_annotations",
-  get_pb = TRUE
+  celltype_col = "seurat_annotations"
 )
 ```
 
@@ -153,8 +152,7 @@ names(sce_object@colData)
 ecoda_object <- create_ecoda_object(
   sce_object,
   sample_col = "sample",
-  celltype_col = "cluster",
-  get_pb = TRUE
+  celltype_col = "cluster"
 )
 ```
 
@@ -169,7 +167,8 @@ Here, we load the immune cell composition in samples from a breast cancer cohort
 
 -   If you create an ECODA object from a data frame containg relative abundances
     (in %), please use percentage values (e.g. 30 for 30%) and not as decimals
-    (NOT 0.3 for 30%). If the relative abundances sum up to 100%, they will be automatically re-scaled to 100 and you will be informed with a message.
+    (NOT 0.3 for 30%). If the relative abundances sum up to 100%, they will be
+    automatically re-scaled to 100 and you will be informed with a message.
 -   If you do add metadata, **it is important to make sure that the
     counts/frequency and the metadata data frames have the same row names**.
 
@@ -222,7 +221,7 @@ plot_pca(
   ecoda_object,
   label_col = "Tissue",
   title = "PCA based on cell type composition",
-  n_ct_show = 5
+  n_hv_feat_show = 5 # Shows the most highly variable features (cell types)
 )
 
 # Using only the most highly variable cell types
@@ -231,11 +230,14 @@ plot_pca(
   slot = "clr_hvc",
   label_col = "Tissue",
   title = "PCA based on highly variable cell types",
-  n_ct_show = 5
+  n_hv_feat_show = 5
 )
+```
 
+### Quantifying group separation
 
-# You can get the scores like this:
+```{r message=FALSE, warning=FALSE}
+# You can get the separatino scores like this:
 feat_mat <- ecoda_object@clr
 labels <- ecoda_object@metadata$Tissue
 
@@ -433,6 +435,53 @@ ecoda_object_new <- find_hvcs(ecoda_object, top_n_hvcs = 5)
 plot_varmean(ecoda_object_new) + ggtitle("Top 5 HVCs")
 ```
 
+# scECODA and pseudobulk
+
+**ECODA is much more interpretable** (10-100 cell types) compared to gene
+expression (2'000 - 20'000 genes).
+
+Pseudobulk analysis has the advantage of not requiring cell type annotations.
+However, it is also commonly affected by batch effects which need to be
+accounted for.
+
+The scECODA package provides convenient functions to explore sample structure at
+the population level based on cell type composition but also by default
+automatically calculates DESeq2-normalized [@love2015] sample pseudobulk gene
+expression.
+
+This offers the possibility to compare sample structure based on either cell
+type composition or pseudobulk gene expression like this:
+
+```{r message=FALSE, warning=FALSE}
+# Loading an example SingleCellExperiment dataset
+library(scRNAseq)
+
+all.ds <- surveyDatasets()
+ds <- 1
+sce_object <- fetchDataset(all.ds@listData[["name"]][ds], all.ds@listData[["version"]][ds])
+
+ecoda_object <- create_ecoda_object(
+  sce_object,
+  sample_col = "sample",
+  celltype_col = "cluster",
+)
+
+plot_pca(
+  ecoda_object,
+  label_col = "Condition",
+  title = "PCA based on cell type composition",
+  n_hv_feat_show = 5
+)
+
+plot_pca(
+  ecoda_object,
+  slot = "pb",
+  label_col = "Condition",
+  title = "PCA based on pseudobulk gene expression"
+  #, n_hv_feat_show = 5 # optionally, show top n most highly variable genes
+)
+```
+
 # References
 
 # Session Info
@@ -440,3 +489,4 @@ plot_varmean(ecoda_object_new) + ggtitle("Top 5 HVCs")
 ```{r}
 sessionInfo()
 ```
+
