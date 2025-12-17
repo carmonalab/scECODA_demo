@@ -8538,7 +8538,7 @@
       "Source": "GitHub",
       "Title": "Single-Cell Exploratory Compositional Data Analysis",
       "Authors@R": "c( person(\"Christian\", \"Halter\", email = \"Christian.Halter@unil.ch\", role = c(\"aut\", \"cre\")), person(\"Massimo\", \"Andreatta\", email = \"Massimo.Andreatta@unige.ch\", role = c(\"aut\"), comment = c(ORCID = '0000-0002-8036-2647')), person(\"Santiago\", \"Carmona\", email = \"Santiago.Carmona@unige.ch\", role = c(\"aut\"), comment = c(ORCID = '0000-0002-2495-0671')) )",
-      "Description": "The scECODA R package provides a complete workflow for the analysis and visualization of compositional data, primarily focusing on cell type proportions derived from single-cell data. It implements specialized methods, such as the Centered Log-Ratio (CLR) transformation, to properly analyze proportional data while avoiding the biases introduced by the compositional constraint. The package encapsulates data management, transformation, and analysis into a single ECODA S4 object, offering downstream tools for dimensionality reduction via PCA, calculating critical metrics like the Adjusted Rand Index (ARI) and Modularity to quantify sample grouping quality, and generating high-quality visualizations like heatmaps and scatter plots.",
+      "Description": "The scECODA R package provides a complete workflow for the  analysis and visualization of compositional data, primarily focusing on  cell type proportions derived from single-cell data. It implements  specialized methods, such as the Centered Log-Ratio (CLR) transformation,  to properly analyze proportional data while avoiding the biases introduced  by the compositional constraint. The package encapsulates data management,  transformation, and analysis into a single ECODA S4 object, offering  downstream tools for dimensionality reduction via PCA, calculating critical metrics like the Adjusted Rand Index (ARI) and Modularity to quantify  sample grouping quality, and generating high-quality visualizations like  heatmaps and scatter plots.",
       "License": "GPL (>= 3)",
       "Encoding": "UTF-8",
       "Roxygen": "list(markdown = TRUE)",
@@ -8570,21 +8570,19 @@
         "plotly",
         "RANN",
         "rlang",
+        "rstatix",
         "stringr",
-        "tibble",
         "tidyr",
-        "vegan",
-        "corrplot"
+        "vegan"
       ],
+      "Author": "Christian Halter [aut, cre], Massimo Andreatta [aut] (<https://orcid.org/0000-0002-8036-2647>), Santiago Carmona [aut] (<https://orcid.org/0000-0002-2495-0671>)",
+      "Maintainer": "Christian Halter <Christian.Halter@unil.ch>",
       "RemoteType": "github",
       "RemoteHost": "api.github.com",
-      "RemoteRepo": "scECODA",
       "RemoteUsername": "carmonalab",
-      "RemoteRef": "HEAD",
-      "RemoteSha": "d07df243417ca3ce35ae4c5c8cbcaa274ce38fcc",
-      "NeedsCompilation": "no",
-      "Author": "Christian Halter [aut, cre], Massimo Andreatta [aut] (<https://orcid.org/0000-0002-8036-2647>), Santiago Carmona [aut] (<https://orcid.org/0000-0002-2495-0671>)",
-      "Maintainer": "Christian Halter <Christian.Halter@unil.ch>"
+      "RemoteRepo": "scECODA",
+      "RemoteRef": "master",
+      "RemoteSha": "853d3f28774a61911ff2d1f5786f0d769b973ae4"
     },
     "scRNAseq": {
       "Package": "scRNAseq",
