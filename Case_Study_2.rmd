@@ -56,7 +56,6 @@ Check package dependencies and install scECODA
 # renv::restore()
 # renv::install("carmonalab/scECODA")
 
-remotes::install_github("carmonalab/scECODA")
 library(scECODA)
 ```
 
