@@ -158,7 +158,7 @@ Here, we load the immune cell composition in samples from a breast cancer cohort
 
 **NOTES:**
 
--   If you create an ECODA object from a data frame containg relative abundances
+-   If you create an ECODA object from a data frame containing relative abundances
     (in %), please use percentage values (e.g. 30 for 30%) and not as decimals
     (NOT 0.3 for 30%). If the relative abundances sum up to 100%, they will be
     automatically re-scaled to 100 and you will be informed with a message.
@@ -174,15 +174,9 @@ counts <- Zhang$cell_counts_lowresolution
 freq <- calc_freq(counts)
 metadata <- Zhang$metadata
 
-ecoda_object <- ecoda(
-  data = counts,
-  metadata = metadata
-)
+ecoda_object <- ecoda(data = counts, metadata = metadata)
 
-ecoda_object <- ecoda(
-  freq = freq,
-  metadata = metadata
-)
+ecoda_object <- ecoda(data = freq, metadata = metadata)
 ```
 
 --------------------------------------------------------------------------------
@@ -252,11 +246,7 @@ there are other main sources of variance. For this purpose, we can also plot the
 PCA in 3D.
 
 ```{r}
-plot_pca(
-  ecoda_object,
-  label_col = "Tissue",
-  plotly_3d = TRUE
-)
+plot_pca(ecoda_object, label_col = "Tissue", plotly_3d = TRUE)
 ```
 
 ## Box and bar plots
@@ -479,60 +469,52 @@ plot_pca(
 
 # FAQ
 
-## How can I subset or drop specific cell types?
+## Can ECODA be affected by batch effect?
 
-You may want to exclude cell types that introduce technical noise rather than
-biological signal. Common candidates for removal include:
+Yes, ECODA can be influenced by technical variation between batches. A "batch
+effect" can manifests as an artificial inflation or depletion of specific cell
+types due to sample handling rather than biology.
 
--   Technical artifacts: Red blood cells or platelets from tissue contamination.
--   High-variance types: Fragile cells like neutrophils, which often show
-    inconsistent recovery rates across samples.
+Common examples include:
 
-Removing these "nuisance" populations helps mitigate batch effects and ensures
-that compositional changes reflect true biology rather than sample preparation
-artifacts.
+-   Technical artifacts: Red blood cells or platelets resulting from tissue
+    contamination or varied bleeding during surgery/dissection.
+-   High-variance/Fragile types: Some cell types, e.g. neutrophils, can be 
+    sensitive to dissociation protocols, resulting in inconsistent recovery 
+    rates across samples.
 
-**Recommended Workflow:**
-
--   **From a Matrix:** Subset your cell count matrix before creating the
-    `ecoda_object`.
--   **From Seurat/SCE:** If you want to work with pseudobulk data, please subset
-    your Seurat/SCE object first. Alternatively, convert your object directly to
-    an `ecoda_object`. Then, you can extract the count matrix, filter out the 
-    unwanted cell types, and re-initialize the object for a clean analysis as
-    shown below.
-
-```{r eval=FALSE, include=FALSE}
-# From a Matrix:
-counts <- example_data$Stephenson$cell_counts_highresolution
-ct_remove <- c(
-  "Platelets",
-  "RBC"
-)
-counts_sub <- counts[, !colnames(counts) %in% ct_remove]
-metadata <- example_data$Stephenson$metadata
+Removing these "nuisance" populations can help mitigating noise and/or batch 
+effect, and to better capture true biological variation.
 
 
-# From Seurat/SCE:
-ecoda_object <- ecoda(
-  seurat_object,
-  sample_col = "sample_id",
-  celltype_col = "seurat_annotations"
-)
-counts <- ecoda_object@counts
-ct_remove <- c(
-  "Platelet",
-  "NA"
-)
-counts_sub <- counts[, !colnames(counts) %in% ct_remove]
-metadata <- ecoda_object@metadata
+## Should I remove red blood cells, platelets and neutrophils?
+
+Yes, we recommended to exclude cell types that introduce technical noise
+rather than biological signal.
 
 
-# Create new subsetted ecoda object
-ecoda_object_sub <- ecoda(
-  data = counts_sub,
-  metadata = metadata
-)
+## How can I remove specific cell types?
+
+The recommended workflow depends on your data source and whether you require
+pseudobulk analysis:
+
+-   From a Count Matrix: Simply remove the unwanted columns (cell types) from 
+    your matrix before passing it to ecoda().
+-   From Seurat/SCE (with Pseudobulk): If you set get_pb = TRUE, you must subset
+    your Seurat or SCE object first. This ensures that the gene expression 
+    aggregation (pseudobulk) only includes the cells you are interested in.
+-   From an existing ECODA object: You can easily extract the data, filter it, 
+    and re-initialize a clean object:
+
+```{r eval=FALSE}
+# 1. Extract and filter counts
+# Identify indices of cell types to keep
+keep <- !colnames(ecoda_obj@counts) %in% c("RBC", "Platelets", "Neutrophils")
+counts_subset <- ecoda_obj@counts[, keep]
+
+# 2. Re-initialize the object
+# This ensures all transformations (CLR, HVCs, etc.) are recalculated correctly
+ecoda_obj_clean <- ecoda(data = counts_subset, metadata = ecoda_obj@metadata)
 ```
 
 # References
