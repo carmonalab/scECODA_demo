@@ -11,7 +11,7 @@
 
 <meta name="author" content="Christian Halter" />
 
-<meta name="date" content="2025-10-28" />
+<meta name="date" content="2025-12-17" />
 
 <title>Case Study 1: Granularity Matters</title>
 
@@ -1851,7 +1851,7 @@ function toggle_visibility(id1) {
 
 <h1 class="title toc-ignore">Case Study 1: Granularity Matters</h1>
 <p class="author-name">Christian Halter</p>
-<h4 class="date">2025-10-28</h4>
+<h4 class="date">2025-12-17</h4>
 
 </div>
 
@@ -1911,16 +1911,16 @@ metadata$age_cmv &lt;- paste0(metadata$age_group, &quot; CMV-&quot;, metadata$su
 counts_lowres &lt;- data$cell_counts_lowresolution
 number_of_celltypes_lr &lt;- ncol(counts_lowres)
 
-ecoda_object_lowres &lt;- create_ecoda_object_helper(
-  counts = counts_lowres,
+ecoda_object_lowres &lt;- ecoda(
+  counts_lowres,
   metadata = metadata
 )
 
 counts_highres &lt;- data$cell_counts_highresolution
 number_of_celltypes_hr &lt;- ncol(counts_highres)
 
-ecoda_object_highres &lt;- create_ecoda_object_helper(
-  counts = counts_highres,
+ecoda_object_highres &lt;- ecoda(
+  counts_highres,
   metadata = metadata
 )
 
@@ -1955,16 +1955,16 @@ metadata &lt;- data$metadata
 counts_lowres &lt;- data$cell_counts_lowresolution
 number_of_celltypes_lr &lt;- ncol(counts_lowres)
 
-ecoda_object_lowres &lt;- create_ecoda_object_helper(
-  counts = counts_lowres,
+ecoda_object_lowres &lt;- ecoda(
+  counts_lowres,
   metadata = metadata
 )
 
 counts_highres &lt;- data$cell_counts_highresolution
 number_of_celltypes_hr &lt;- ncol(counts_highres)
 
-ecoda_object_highres &lt;- create_ecoda_object_helper(
-  counts = counts_highres,
+ecoda_object_highres &lt;- ecoda(
+  counts_highres,
   metadata = metadata
 )
 
@@ -2033,7 +2033,7 @@ Gong, Qiuyu, Mehul Sharma, Emma L. Kuan, Marla C. Glass, Aishwarya Chander, Mans
 ##  [13] backports_1.5.0             XVector_0.44.0             
 ##  [15] labeling_0.4.3              rmarkdown_2.30             
 ##  [17] UCSC.utils_1.0.0            purrr_1.1.0                
-##  [19] xfun_0.53                   zlibbioc_1.50.0            
+##  [19] xfun_0.54                   zlibbioc_1.50.0            
 ##  [21] cachem_1.1.0                GenomeInfoDb_1.40.1        
 ##  [23] jsonlite_2.0.0              DelayedArray_0.30.1        
 ##  [25] BiocParallel_1.38.0         broom_1.0.10               
@@ -2045,13 +2045,13 @@ Gong, Qiuyu, Mehul Sharma, Emma L. Kuan, Marla C. Glass, Aishwarya Chander, Mans
 ##  [37] bookdown_0.45               SummarizedExperiment_1.34.0
 ##  [39] knitr_1.50                  IRanges_2.38.1             
 ##  [41] Matrix_1.7-4                splines_4.4.2              
-##  [43] igraph_2.2.0                tidyselect_1.2.1           
+##  [43] igraph_2.2.1                tidyselect_1.2.1           
 ##  [45] abind_1.4-8                 yaml_2.3.10                
 ##  [47] vegan_2.7-2                 codetools_0.2-20           
 ##  [49] curl_7.0.0                  lattice_0.22-7             
 ##  [51] tibble_3.3.0                Biobase_2.64.0             
 ##  [53] withr_3.0.2                 S7_0.2.0                   
-##  [55] evaluate_1.0.5              mclust_6.1.1               
+##  [55] evaluate_1.0.5              mclust_6.1.2               
 ##  [57] pillar_1.11.1               BiocManager_1.30.26        
 ##  [59] ggpubr_0.6.2                MatrixGenerics_1.16.0      
 ##  [61] carData_3.0-5               corrplot_0.95              
