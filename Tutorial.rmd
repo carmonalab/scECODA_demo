@@ -27,10 +27,6 @@ knitr::opts_chunk$set(
 )
 ```
 
-# Exploring sample structure at the population scale based on cell type composition
-
---------------------------------------------------------------------------------
-
 # Introduction
 
 The scECODA package provides functions for *s*ingle-*c*ell *E*xploratory
@@ -41,19 +37,12 @@ clustering functions. Additionally, it provides metrics to quantify how strongly
 groups of samples separate and which cell types are driving this separation
 (differential abundance analysis).
 
---------------------------------------------------------------------------------
-
-# R environment
-
-Check package dependencies and install scECODA
-
 ```{r}
 # if (!requireNamespace("renv")) install.packages("renv")
 # library(renv)
 # renv::restore()
 # renv::install("carmonalab/scECODA")
 
-remotes::install_github("carmonalab/scECODA")
 library(scECODA)
 ```
 
@@ -62,10 +51,8 @@ library(scECODA)
 # Create ECODA objects
 
 You can create an ECODA object from a single-cell data (Seurat or
-SingleCellExperiment object) with `create_ecoda_object()`.
-
-Alternatively, you can create an ECODA object from a data frame containing cell
-counts or frequencies (in % per sample) with `create_ecoda_object_helper()`.
+SingleCellExperiment object) or from a data frame containing cell
+counts or frequencies (in % per sample) with `ecoda()`.
 
 Based on the input, the following data and transformations will be automatically
 calculated:
@@ -130,7 +117,7 @@ seurat_object$condition_id <- c(rep("condition1", n_samples/n_groups),
 
 ```{r}
 # Create ECODA object
-ecoda_object <- create_ecoda_object(
+ecoda_object <- ecoda(
   seurat_object,
   sample_col = "sample_id",
   celltype_col = "seurat_annotations"
@@ -155,7 +142,7 @@ names(sce_object@colData)
 
 ```{r}
 # Create ECODA object
-ecoda_object <- create_ecoda_object(
+ecoda_object <- ecoda(
   sce_object,
   sample_col = "sample",
   celltype_col = "cluster"
@@ -187,12 +174,12 @@ counts <- Zhang$cell_counts_lowresolution
 freq <- calc_freq(counts)
 metadata <- Zhang$metadata
 
-ecoda_object <- create_ecoda_object_helper(
-  counts = counts,
+ecoda_object <- ecoda(
+  data = counts,
   metadata = metadata
 )
 
-ecoda_object <- create_ecoda_object_helper(
+ecoda_object <- ecoda(
   freq = freq,
   metadata = metadata
 )
@@ -218,8 +205,8 @@ with different metrics, for example:
     is not robust to outliers. ANOSIM and modularity are more robust.)
 
 ```{r message=FALSE, warning=FALSE}
-ecoda_object <- create_ecoda_object_helper(
-  counts = example_data$Zhang$cell_counts_lowresolution,
+ecoda_object <- ecoda(
+  data = example_data$Zhang$cell_counts_lowresolution,
   metadata = example_data$Zhang$metadata,
 )
 
@@ -356,8 +343,8 @@ And here an example of a large healthy cohort with 868 samples and 69 cell types
 [@gong2024]:
 
 ```{r fig.height=16, fig.width=12}
-ecoda_object <- create_ecoda_object_helper(
-  counts = example_data$GongSharma_full$cell_counts_highresolution,
+ecoda_object <- ecoda(
+  data = example_data$GongSharma_full$cell_counts_highresolution,
   metadata = example_data$GongSharma_full$metadata
 )
 
@@ -467,10 +454,11 @@ sce_object <- fetchDataset(
   all.ds@listData[["version"]][ds]
 )
 
-ecoda_object <- create_ecoda_object(
-  sce_object,
+ecoda_object <- ecoda(
+  data = sce_object,
   sample_col = "sample",
   celltype_col = "cluster",
+  get_pb = TRUE
 )
 
 plot_pca(
@@ -486,6 +474,64 @@ plot_pca(
   label_col = "Condition",
   title = "PCA based on pseudobulk gene expression"
   #, n_hv_feat_show = 5 # optionally, show top n most highly variable genes
+)
+```
+
+# FAQ
+
+## How can I subset or drop specific cell types?
+
+You may want to exclude cell types that introduce technical noise rather than
+biological signal. Common candidates for removal include:
+
+-   Technical artifacts: Red blood cells or platelets from tissue contamination.
+-   High-variance types: Fragile cells like neutrophils, which often show
+    inconsistent recovery rates across samples.
+
+Removing these "nuisance" populations helps mitigate batch effects and ensures
+that compositional changes reflect true biology rather than sample preparation
+artifacts.
+
+**Recommended Workflow:**
+
+-   **From a Matrix:** Subset your cell count matrix before creating the
+    `ecoda_object`.
+-   **From Seurat/SCE:** If you want to work with pseudobulk data, please subset
+    your Seurat/SCE object first. Alternatively, convert your object directly to
+    an `ecoda_object`. Then, you can extract the count matrix, filter out the 
+    unwanted cell types, and re-initialize the object for a clean analysis as
+    shown below.
+
+```{r eval=FALSE, include=FALSE}
+# From a Matrix:
+counts <- example_data$Stephenson$cell_counts_highresolution
+ct_remove <- c(
+  "Platelets",
+  "RBC"
+)
+counts_sub <- counts[, !colnames(counts) %in% ct_remove]
+metadata <- example_data$Stephenson$metadata
+
+
+# From Seurat/SCE:
+ecoda_object <- ecoda(
+  seurat_object,
+  sample_col = "sample_id",
+  celltype_col = "seurat_annotations"
+)
+counts <- ecoda_object@counts
+ct_remove <- c(
+  "Platelet",
+  "NA"
+)
+counts_sub <- counts[, !colnames(counts) %in% ct_remove]
+metadata <- ecoda_object@metadata
+
+
+# Create new subsetted ecoda object
+ecoda_object_sub <- ecoda(
+  data = counts_sub,
+  metadata = metadata
 )
 ```
 

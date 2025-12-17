@@ -95,16 +95,16 @@ metadata$age_cmv <- paste0(metadata$age_group, " CMV-", metadata$subject.cmv)
 counts_lowres <- data$cell_counts_lowresolution
 number_of_celltypes_lr <- ncol(counts_lowres)
 
-ecoda_object_lowres <- create_ecoda_object_helper(
-  counts = counts_lowres,
+ecoda_object_lowres <- ecoda(
+  counts_lowres,
   metadata = metadata
 )
 
 counts_highres <- data$cell_counts_highresolution
 number_of_celltypes_hr <- ncol(counts_highres)
 
-ecoda_object_highres <- create_ecoda_object_helper(
-  counts = counts_highres,
+ecoda_object_highres <- ecoda(
+  counts_highres,
   metadata = metadata
 )
 
@@ -143,16 +143,16 @@ metadata <- data$metadata
 counts_lowres <- data$cell_counts_lowresolution
 number_of_celltypes_lr <- ncol(counts_lowres)
 
-ecoda_object_lowres <- create_ecoda_object_helper(
-  counts = counts_lowres,
+ecoda_object_lowres <- ecoda(
+  counts_lowres,
   metadata = metadata
 )
 
 counts_highres <- data$cell_counts_highresolution
 number_of_celltypes_hr <- ncol(counts_highres)
 
-ecoda_object_highres <- create_ecoda_object_helper(
-  counts = counts_highres,
+ecoda_object_highres <- ecoda(
+  counts_highres,
   metadata = metadata
 )
 
