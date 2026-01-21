@@ -51,8 +51,8 @@ library(scECODA)
 # Create ECODA objects
 
 You can create an ECODA object from a single-cell data (Seurat or
-SingleCellExperiment object) or from a data frame containing cell
-counts or frequencies (in % per sample) with `ecoda()`.
+SingleCellExperiment object) or from a data frame containing cell counts or
+frequencies (in % per sample) with `ecoda()`.
 
 Based on the input, the following data and transformations will be automatically
 calculated:
@@ -82,9 +82,9 @@ Additionally, it will calculate useful metrics, such as:
 
 **NOTE:** To calculate CLR-transformed cell type abundances, zero counts or
 relative abundances are not allowed (log of zero is not defined). For this
-reason, zeros are imputed by adding a pseudocount of +1 to all samples (to not
-distort ratios) or the smallest value in case the ECODA object was created from
-a data frame of relative abundances.
+reason, zeros are imputed by adding a pseudocount of + (2/3) (to not distort
+ratios) or 2/3 times the smallest value [@martín-fernández2003] in case the
+ECODA object was created from a data frame of relative abundances.
 
 ## From Seurat object
 
@@ -158,10 +158,11 @@ Here, we load the immune cell composition in samples from a breast cancer cohort
 
 **NOTES:**
 
--   If you create an ECODA object from a data frame containing relative abundances
-    (in %), please use percentage values (e.g. 30 for 30%) and not as decimals
-    (NOT 0.3 for 30%). If the relative abundances sum up to 100%, they will be
-    automatically re-scaled to 100 and you will be informed with a message.
+-   If you create an ECODA object from a data frame containing relative
+    abundances (in %), please use percentage values (e.g. 30 for 30%) and not as
+    decimals (NOT 0.3 for 30%). If the relative abundances sum up to 100%, they
+    will be automatically re-scaled to 100 and you will be informed with a
+    message.
 -   If you do add metadata, **it is important to make sure that the
     counts/frequency and the metadata data frames have the same row names**.
 
@@ -479,31 +480,29 @@ Common examples include:
 
 -   Technical artifacts: Red blood cells or platelets resulting from tissue
     contamination or varied bleeding during surgery/dissection.
--   High-variance/Fragile types: Some cell types, e.g. neutrophils, can be 
-    sensitive to dissociation protocols, resulting in inconsistent recovery 
+-   High-variance/Fragile types: Some cell types, e.g. neutrophils, can be
+    sensitive to dissociation protocols, resulting in inconsistent recovery
     rates across samples.
 
-Removing these "nuisance" populations can help mitigating noise and/or batch 
+Removing these "nuisance" populations can help mitigating noise and/or batch
 effect, and to better capture true biological variation.
-
 
 ## Should I remove red blood cells, platelets and neutrophils?
 
-Yes, we recommended to exclude cell types that introduce technical noise
-rather than biological signal.
-
+Yes, we recommended to exclude cell types that introduce technical noise rather
+than biological signal.
 
 ## How can I remove specific cell types?
 
 The recommended workflow depends on your data source and whether you require
 pseudobulk analysis:
 
--   From a Count Matrix: Simply remove the unwanted columns (cell types) from 
+-   From a Count Matrix: Simply remove the unwanted columns (cell types) from
     your matrix before passing it to ecoda().
 -   From Seurat/SCE (with Pseudobulk): If you set get_pb = TRUE, you must subset
-    your Seurat or SCE object first. This ensures that the gene expression 
+    your Seurat or SCE object first. This ensures that the gene expression
     aggregation (pseudobulk) only includes the cells you are interested in.
--   From an existing ECODA object: You can easily extract the data, filter it, 
+-   From an existing ECODA object: You can easily extract the data, filter it,
     and re-initialize a clean object:
 
 ```{r eval=FALSE}
