@@ -247,7 +247,7 @@ there are other main sources of variance. For this purpose, we can also plot the
 PCA in 3D.
 
 ```{r}
-plot_pca(ecoda_object, label_col = "Tissue", plotly_3d = TRUE)
+plot_pca3d(ecoda_object, label_col = "Tissue")
 ```
 
 ## Box and bar plots
