@@ -218,14 +218,14 @@ plot_pca(
   slot = "clr_hvc",
   label_col = "Tissue",
   title = "PCA based on highly variable cell types",
-  n_hv_feat_show = 5
+  n_hv_feat_show = ncol(ecoda_object@clr_hvc)
 )
 ```
 
 ### Quantifying group separation
 
 ```{r message=FALSE, warning=FALSE}
-# You can get the separatino scores like this:
+# You can get the separation scores like this:
 feat_mat <- ecoda_object@clr
 labels <- ecoda_object@metadata$Tissue
 
