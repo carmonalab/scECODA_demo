@@ -141,6 +141,111 @@ Observe what happens if you introduce a differential abundance of CD8 T and NK
 cells between the two groups.
 
 ```{r}
+
+seurat_multiply_cells_in_condition <- function(
+  seurat_object,
+  condition_column,
+  target_condition,
+  celltype_column,
+  target_celltypes,
+  multiplier
+) {
+  if (!requireNamespace("Seurat", quietly = TRUE)) {
+    stop(
+      "Package \"Seurat\" must be installed to use this function.",
+      call. = FALSE
+    )
+  }
+
+  if (multiplier < 1) {
+    stop("Multiplier must be 1 or greater.")
+  }
+
+  # --- Input Validation ---
+  if (!(condition_column %in% names(seurat_object@meta.data))) {
+    stop(
+      "Condition column '",
+      condition_column,
+      "' not found in Seurat metadata."
+    )
+  }
+  if (!(celltype_column %in% names(seurat_object@meta.data))) {
+    stop(
+      "Cell type column '",
+      celltype_column,
+      "' not found in Seurat metadata."
+    )
+  }
+
+  # 1. Identify the cells to be duplicated (Logical AND)
+  original_cell_names <- rownames(seurat_object@meta.data)
+  metadata <- seurat_object@meta.data
+
+  # Logical vector 1: Cells matching the target condition
+  condition_logic <- metadata[[condition_column]] == target_condition
+
+  # Logical vector 2: Cells matching ANY of the target cell types
+  celltype_logic <- metadata[[celltype_column]] %in% target_celltypes
+
+  # Final selection: Cells that satisfy BOTH criteria (logical AND: &)
+  cells_to_copy_logic <- condition_logic & celltype_logic
+  cells_to_copy_names <- original_cell_names[cells_to_copy_logic]
+
+
+  if (length(cells_to_copy_names) == 0) {
+    warning(
+      "No cells found matching both '", target_condition,
+      "' and any of the specified cell types."
+    )
+    return(seurat_object)
+  }
+
+  # Initial data to start the accumulation
+  multiplied_counts <- seurat_object@assays[["RNA"]]$counts
+  multiplied_metadata <- metadata
+
+  # 2. Iterate and Duplicate (Multiplier - 1) times
+  # We subset the original data once
+  # to ensure we don't accidentally subset the growing multiplied data
+  original_counts_to_copy <- multiplied_counts[, cells_to_copy_names]
+  original_metadata_to_copy <- multiplied_metadata[cells_to_copy_names, ]
+
+  for (i in seq_len(multiplier - 1)) {
+    suffix <- paste0("_", i)
+
+    # --- Counts Duplication ---
+    new_cell_names_counts <- paste0(cells_to_copy_names, suffix)
+    counts_to_copy <- original_counts_to_copy
+    colnames(counts_to_copy) <- new_cell_names_counts
+
+    multiplied_counts <- cbind(multiplied_counts, counts_to_copy)
+
+    # --- Metadata Duplication ---
+    new_cell_names_meta <- paste0(rownames(original_metadata_to_copy), suffix)
+    metadata_to_copy <- original_metadata_to_copy
+    rownames(metadata_to_copy) <- new_cell_names_meta
+
+    multiplied_metadata <- rbind(multiplied_metadata, metadata_to_copy)
+  }
+
+  # 3. Create the new Seurat Object
+  new_seurat_object <- Seurat::CreateSeuratObject(
+    counts = multiplied_counts,
+    meta.data = multiplied_metadata,
+    assay = "RNA"
+  )
+
+  new_seurat_object@project.name <- paste0(
+    seurat_object@project.name,
+    "_Targeted_Multiplied"
+  )
+
+  return(new_seurat_object)
+}
+```
+
+
+```{r}
 # Multiply CD8 T cells and NK cells within "condition2" by 5:
 seurat_object_DiffAbu <- seurat_multiply_cells_in_condition(
   seurat_object = seurat_object,
