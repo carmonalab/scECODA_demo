@@ -86,43 +86,6 @@ reason, zeros are imputed by adding a pseudocount of + (2/3) (to not distort
 ratios) or 2/3 times the smallest value [@martín-fernández2003] in case the
 ECODA object was created from a data frame of relative abundances.
 
-## From Seurat object
-
-```{r message=FALSE, warning=FALSE}
-# Loading an example Seurat dataset
-library(Seurat)
-library(SeuratData)
-InstallData("pbmc3k")
-data("pbmc3k")
-seurat_object <- UpdateSeuratObject(pbmc3k)
-```
-
-The cells of this example dataset are annotated but not assigned to samples or
-biological conditions. Let us artificially assign them by creating a sample and
-condition column in the metadata.
-
-```{r}
-n_samples <- 40
-n_groups <- 2
-
-seurat_object$sample_id <- ""
-seurat_object$sample_id <- rep(
-  x = paste0("sample", seq(n_samples)),
-  length.out = length(seurat_object$sample_id)
-)
-seurat_object$condition_id <- ""
-seurat_object$condition_id <- c(rep("condition1", n_samples/n_groups),
-                      rep("condition2", n_samples/n_groups))
-```
-
-```{r}
-# Create ECODA object
-ecoda_object <- ecoda(
-  seurat_object,
-  sample_col = "sample_id",
-  celltype_col = "seurat_annotations"
-)
-```
 
 ## From SingleCellExperiment object
 
@@ -146,6 +109,47 @@ ecoda_object <- ecoda(
   sce_object,
   sample_col = "sample",
   celltype_col = "cluster"
+)
+```
+
+
+## From Seurat object
+
+```{r message=FALSE, warning=FALSE, eval = requireNamespace("SeuratData", quietly = TRUE)}
+# Loading an example Seurat dataset
+library(Seurat)
+# install.packages("devtools")
+# devtools::install_github('satijalab/seurat-data')
+library(SeuratData)
+InstallData("pbmc3k")
+data("pbmc3k")
+seurat_object <- UpdateSeuratObject(pbmc3k)
+```
+
+The cells of this example dataset are annotated but not assigned to samples or
+biological conditions. Let us artificially assign them by creating a sample and
+condition column in the metadata.
+
+```{r, eval = requireNamespace("SeuratData", quietly = TRUE)}
+n_samples <- 40
+n_groups <- 2
+
+seurat_object$sample_id <- ""
+seurat_object$sample_id <- rep(
+  x = paste0("sample", seq(n_samples)),
+  length.out = length(seurat_object$sample_id)
+)
+seurat_object$condition_id <- ""
+seurat_object$condition_id <- c(rep("condition1", n_samples/n_groups),
+                      rep("condition2", n_samples/n_groups))
+```
+
+```{r, eval = requireNamespace("SeuratData", quietly = TRUE)}
+# Create ECODA object
+ecoda_object <- ecoda(
+  seurat_object,
+  sample_col = "sample_id",
+  celltype_col = "seurat_annotations"
 )
 ```
 
@@ -407,10 +411,10 @@ all samples:
 
 ```{r}
 library(ggplot2)
-plot_varmean(ecoda_object, label_points = T) +
+plot_varmean(ecoda_object) +
   ggtitle("Default - cell types explaining 50% variance")
 
-plot_varmean(ecoda_object) +
+plot_varmean(ecoda_object, labels = "none") +
   ggtitle("Default - cell types explaining 50% variance")
 
 ecoda_object_new <- find_hvcs(ecoda_object, variance_explained = 0.8)
