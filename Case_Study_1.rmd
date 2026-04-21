@@ -94,7 +94,7 @@ metadata$age_cmv <- paste0(metadata$age_group, " CMV-", metadata$subject.cmv)
 counts_lowres <- data$cell_counts_lowresolution
 number_of_celltypes_lr <- ncol(counts_lowres)
 
-ecoda_object_lowres <- ecoda(
+se_lowres <- ecoda(
   counts_lowres,
   metadata = metadata
 )
@@ -102,7 +102,7 @@ ecoda_object_lowres <- ecoda(
 counts_highres <- data$cell_counts_highresolution
 number_of_celltypes_hr <- ncol(counts_highres)
 
-ecoda_object_highres <- ecoda(
+se_highres <- ecoda(
   counts_highres,
   metadata = metadata
 )
@@ -110,7 +110,7 @@ ecoda_object_highres <- ecoda(
 
 # Using only low granularity cell type annotation
 plot_pca(
-  ecoda_object_lowres,
+  se_lowres,
   label_col = "age_cmv",
 #   title = paste("PCA based on low granularity cell type annotation
 # Number of cell types:", number_of_celltypes_lr),
@@ -120,7 +120,7 @@ plot_pca(
 
 # Using only high granularity cell type annotation
 plot_pca(
-  ecoda_object_highres,
+  se_highres,
   label_col = "age_cmv",
 #   title = paste("PCA based on high granularity cell type annotation
 # Number of cell types:", number_of_celltypes_hr),
@@ -142,7 +142,7 @@ metadata <- data$metadata
 counts_lowres <- data$cell_counts_lowresolution
 number_of_celltypes_lr <- ncol(counts_lowres)
 
-ecoda_object_lowres <- ecoda(
+se_lowres <- ecoda(
   counts_lowres,
   metadata = metadata
 )
@@ -150,7 +150,7 @@ ecoda_object_lowres <- ecoda(
 counts_highres <- data$cell_counts_highresolution
 number_of_celltypes_hr <- ncol(counts_highres)
 
-ecoda_object_highres <- ecoda(
+se_highres <- ecoda(
   counts_highres,
   metadata = metadata
 )
@@ -158,7 +158,7 @@ ecoda_object_highres <- ecoda(
 
 # Using only low granularity cell type annotation
 plot_pca(
-  ecoda_object_lowres,
+  se_lowres,
   label_col = main_bio_condition,
   title = paste("PCA based on low granularity cell type annotation"),
   n_hv_feat_show = 5
@@ -167,7 +167,7 @@ plot_pca(
 
 # Using only high granularity cell type annotation
 plot_pca(
-  ecoda_object_highres,
+  se_highres,
   label_col = main_bio_condition,
   title = paste("PCA based on high granularity cell type annotation"),
   n_hv_feat_show = 8

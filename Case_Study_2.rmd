@@ -57,6 +57,7 @@ Check package dependencies and install scECODA
 # renv::install("carmonalab/scECODA")
 
 library(scECODA)
+library(SummarizedExperiment)
 ```
 
 --------------------------------------------------------------------------------
@@ -111,7 +112,7 @@ zero, indicating indeed a random distribution of our samples between conditions.
 
 ```{r}
 # Create ECODA object
-ecoda_object <- ecoda(
+se <- ecoda(
   seurat_object,
   sample_col = "sample_id",
   celltype_col = "seurat_annotations",
@@ -125,13 +126,13 @@ ecoda_object <- ecoda(
 # )
 
 plot_pca(
-  ecoda_object,
+  se,
   label_col = "condition_id",
   title = "PCA - Cell type composition"
 )
 plot_pca(
-  ecoda_object,
-  slot = "pb",
+  se,
+  assay = "pb",
   label_col = "condition_id",
   title = "PCA - Pseudobulk"
 )
@@ -273,21 +274,21 @@ All separation metrics increased and are now close to their maximum value of 1,
 indicating separation of the two groups of samples.
 
 ```{r}
-ecoda_object_DiffAbu <- ecoda(
+se_DiffAbu <- ecoda(
   seurat_object_DiffAbu,
   sample_col = "sample_id",
   celltype_col = "seurat_annotations",
   get_pb = TRUE
 )
 plot_pca(
-  ecoda_object_DiffAbu,
+  se_DiffAbu,
   label_col = "condition_id",
   title = "PCA cell type composition",
   n_hv_feat_show = 2
 )
 plot_pca(
-  ecoda_object_DiffAbu,
-  slot = "pb",
+  se_DiffAbu,
+  assay = "pb",
   label_col = "condition_id",
   title = "PCA pseudobulk",
   n_hv_feat_show = 2
@@ -303,12 +304,12 @@ increase), all others change too (e.g. relatively decrease).
 
 ```{r}
 plot_boxplot(
-  ecoda_object,
+  se,
   label_col = "condition_id",
   title = "CLR Abundance by Cell Type (with Wilcoxon Test)"
 )
 plot_boxplot(
-  ecoda_object_DiffAbu,
+  se_DiffAbu,
   label_col = "condition_id",
   title = "CLR Abundance by Cell Type (with Wilcoxon Test)"
 )
@@ -319,13 +320,13 @@ This can also be plotted as stacked bar plots but it is harder to read.
 ```{r}
 # 1. Plotting Summary by condition_id (your original plot)
 plot_barplot(
-  ecoda_object,
+  se,
   label_col = "condition_id",
   plot_by = "group",
   title = "Mean Relative Abundance by Condition"
 )
 plot_barplot(
-  ecoda_object_DiffAbu,
+  se_DiffAbu,
   label_col = "condition_id",
   plot_by = "group",
   title = "Mean Relative Abundance by Condition"
@@ -333,13 +334,13 @@ plot_barplot(
 
 # 2. Plotting Each Sample Separately (the new request)
 plot_barplot(
-  ecoda_object,
+  se,
   label_col = "condition_id",
   plot_by = "sample",
   title = "Relative Abundance for Each Sample"
 )
 plot_barplot(
-  ecoda_object_DiffAbu,
+  se_DiffAbu,
   label_col = "condition_id",
   plot_by = "sample",
   title = "Relative Abundance for Each Sample"
@@ -351,8 +352,8 @@ correlation between any of the cell types. Afterwards, however, it can be
 clearly seen that CD8 T and NK cells strongly correlate.
 
 ```{r}
-plot_corr(ecoda_object)
-plot_corr(ecoda_object_DiffAbu)
+plot_corr(se)
+plot_corr(se_DiffAbu)
 ```
 
 ### ECODA outperforms pseudobulk in detecting changes in low abundant cell subtypes
@@ -366,7 +367,7 @@ First, we make the Seurat object so that it has a lot more cells. For this
 purpose, we multiply the cells in all samples (both conditions) by 10. Next,
 
 ```{r}
-all_celltypes <- colnames(ecoda_object@counts)
+all_celltypes <- colnames(assay(se, "counts"))
 low_abundant_celltypes <- c("FCGR3A+ Mono", "B")
 high_abundant_celltypes <- all_celltypes[
   !all_celltypes %in% low_abundant_celltypes
@@ -426,21 +427,21 @@ even in low abundant cell types, pseudobulk gene expression completely fails to
 pick up gene expressional differences in low abundant cell types:
 
 ```{r}
-ecoda_object_DiffAbu <- ecoda(
+se_DiffAbu <- ecoda(
   seurat_object_DiffAbu,
   sample_col = "sample_id",
   celltype_col = "seurat_annotations",
   get_pb = TRUE
 )
 plot_pca(
-  ecoda_object_DiffAbu,
+  se_DiffAbu,
   label_col = "condition_id",
   title = "PCA cell type composition",
   n_hv_feat_show = 4
 )
 plot_pca(
-  ecoda_object_DiffAbu,
-  slot = "pb",
+  se_DiffAbu,
+  assay = "pb",
   label_col = "condition_id",
   title = "PCA pseudobulk",
   n_hv_feat_show = 4
