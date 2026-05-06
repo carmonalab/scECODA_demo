@@ -87,11 +87,11 @@ based on their **high-resolution cell type composition**.
 ```{r fig.height=7, fig.width=9}
 data("example_data")
 
-data <- example_data$GongSharma_full
+data <- example_data$Gongsharma_full
 metadata <- data$metadata
 metadata$age_cmv <- paste0(metadata$age_group, " CMV-", metadata$subject.cmv)
 
-counts_lowres <- data$cell_counts_lowresolution
+counts_lowres <- data$cell_counts$authors_LR
 number_of_celltypes_lr <- ncol(counts_lowres)
 
 se_lowres <- ecoda(
@@ -99,7 +99,7 @@ se_lowres <- ecoda(
   metadata = metadata
 )
 
-counts_highres <- data$cell_counts_highresolution
+counts_highres <- data$cell_counts$authors_HR
 number_of_celltypes_hr <- ncol(counts_highres)
 
 se_highres <- ecoda(
@@ -136,10 +136,10 @@ idiopathic pulmonary fibrosis or chronic obstructive pulmonary disease.
 data("example_data")
 
 data <- example_data$Adams
-main_bio_condition <- data$main_biologicalcondition_columnname
+main_bio_condition <- data$biocond_colname
 metadata <- data$metadata
 
-counts_lowres <- data$cell_counts_lowresolution
+counts_lowres <- data$cell_counts$authors_LR
 number_of_celltypes_lr <- ncol(counts_lowres)
 
 se_lowres <- ecoda(
@@ -147,7 +147,7 @@ se_lowres <- ecoda(
   metadata = metadata
 )
 
-counts_highres <- data$cell_counts_highresolution
+counts_highres <- data$cell_counts$authors_HR
 number_of_celltypes_hr <- ncol(counts_highres)
 
 se_highres <- ecoda(
